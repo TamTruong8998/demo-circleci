@@ -10,6 +10,9 @@ import (
 func main() {
 	// New instance echo
 	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, This my first Demo CI/CD")
+	})
 	e.POST("/login", login)
 	e.Logger.Fatal(e.Start(":8989"))
 }
