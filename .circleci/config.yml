@@ -24,6 +24,13 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
+  deploy:
+    executor: docker/docker
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "70:ab:18:62:1c:72:db:fe:76:f1:ae:69:d5:7a:ff:65"
+      - run: ssh -oStrictHostKeyChecking=no -v circleci@192.168.1.121 './deploy.sh'
 
 workflows:
   first-demo:

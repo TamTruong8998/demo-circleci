@@ -1,0 +1,6 @@
+version: '3'
+services: 
+  my-app:
+    image: tamtruong9228/circleci-demo:latest
+    ports: 
+      - "8989:8989"
