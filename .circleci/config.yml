@@ -1,11 +1,36 @@
 version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.14
+orbs:
+  docker: circleci/docker@1.5.0
 
-    working_directory: /go/src/github.com/TamTruong8998/demo-circleci
+jobs:
+  build-and-push:
+    environment:
+      DOCKER_IMAGE: tamtruong9228/circleci-demo
+      DOCKER_TAG: latest
+    executor: docker/docker
     steps:
+      - setup_remote_docker
       - checkout
-      - run: go get -v -t -d ./...
-      - run: go test -v ./...
+      - docker/check:
+          docker-username: DOCKER_USERNAME
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+
+workflows:
+  first-demo:
+    jobs:
+      - build-and-push:
+          filters:
+            branches:
+              only:
+                - main
+        
